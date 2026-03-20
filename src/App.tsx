@@ -448,21 +448,21 @@ export default function App() {
         <div className="flex justify-between items-center mb-6 px-4 opacity-40 text-xs tracking-widest font-medium">
           <div className="flex items-center gap-2">
             <span>MATH.OS 2.4</span>
-            <button 
-              onClick={takeScreenshot}
-              className="p-1.5 hover:bg-white/10 rounded-full transition-colors active:scale-90"
-              title="Take Screenshot"
-            >
-              <Camera size={16} />
-            </button>
           </div>
-          <div className="flex gap-3 items-center">
-            <div className="w-1 h-1 bg-white rounded-full" />
-            <div className="w-1 h-1 bg-white rounded-full" />
-            <div className="w-1 h-1 bg-white rounded-full" />
-            <div className="w-8 h-3.5 border border-white/30 rounded-[3px] p-[1px]">
-              <div className="h-full bg-white/80 w-3/4 rounded-[1px]" />
-            </div>
+          <div className="flex gap-4 items-center uppercase tracking-widest">
+            <button 
+              onClick={() => setMode('INSTRUCTIONS')}
+              className="hover:text-white transition-colors"
+            >
+              使用說明
+            </button>
+            <span className="opacity-20">|</span>
+            <button 
+              onClick={() => setMode('CHANGELOG')}
+              className="hover:text-white transition-colors"
+            >
+              更新日誌
+            </button>
           </div>
         </div>
 
@@ -475,10 +475,8 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] mb-2 font-medium tracking-[0.2em] uppercase">Select Module / 選擇模組</div>
+                <div className="text-[10px] text-[#FF9F0A] mb-2 font-medium tracking-[0.2em] uppercase">選擇模組</div>
                 <div className="text-5xl font-extralight leading-tight tracking-tighter">數感邏輯</div>
-                <div className="text-lg font-light text-white/40 tracking-[0.15em] mt-1">MATH LOGIC</div>
-                <div className="text-[10px] text-white/20 mt-4 font-light uppercase tracking-[0.3em]">Precision Learning</div>
               </motion.div>
             )}
 
@@ -489,18 +487,18 @@ export default function App() {
                 className="w-full text-center flex flex-col items-center"
               >
                 <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">24 點遊戲 / 24 POINT CHALLENGE</div>
-                <div className="flex justify-center gap-4 my-2">
+                <div className="flex justify-center gap-3 my-2 flex-wrap">
                   {gameState.numbers.map((n, i) => (
                     <motion.span 
                       key={i} 
                       initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                      className="text-4xl font-extralight text-white tabular-nums"
+                      className="text-3xl sm:text-4xl font-extralight text-white tabular-nums"
                     >
                       {n}
                     </motion.span>
                   ))}
                 </div>
-                <div className="text-5xl font-extralight tracking-tighter truncate mb-2 text-[#FF9F0A]">
+                <div className="text-4xl sm:text-5xl font-extralight tracking-tighter break-all mb-2 text-[#FF9F0A] min-h-[1.2em] flex items-center justify-center">
                   {gameState.currentExpression.replace(/\*/g, '×').replace(/\//g, '÷') || '0'}
                 </div>
                 
@@ -539,10 +537,10 @@ export default function App() {
                 className="w-full text-center flex flex-col items-center"
               >
                 <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-3 opacity-70">四則運算 / ARITHMETIC</div>
-                <div className="text-4xl font-extralight mb-3 tracking-tighter text-white/90">
+                <div className="text-3xl sm:text-4xl font-extralight mb-3 tracking-tighter text-white/90 break-words">
                   {arithmeticProblem.q} = ?
                 </div>
-                <div className="text-6xl font-extralight tracking-tighter truncate mb-3 text-[#FF9F0A] tabular-nums">
+                <div className="text-5xl sm:text-6xl font-extralight tracking-tighter break-all mb-3 text-[#FF9F0A] tabular-nums">
                   {userAnswer || '0'}
                 </div>
                 <motion.div 
@@ -567,7 +565,7 @@ export default function App() {
                 <div className="text-[12px] text-[#FF9F0A] font-bold tracking-[0.2em] uppercase opacity-90 mb-6">
                   {mode === 'MULT_9X9' ? '標準九九乘法' : '19x19 進階乘法'}
                 </div>
-                <div className="text-6xl font-extralight tracking-tight text-white mb-4 leading-tight">
+                <div className="text-5xl sm:text-6xl font-extralight tracking-tight text-white mb-4 leading-tight">
                   {multProblem.a} × {multProblem.b}
                 </div>
                 <div className="text-5xl font-light text-[#FF9F0A] min-h-[1.2em] mb-8 leading-tight">
@@ -591,7 +589,7 @@ export default function App() {
                 className="w-full text-center flex flex-col items-center"
               >
                 <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-3 opacity-70">因數尋找 / FACTOR FINDER</div>
-                <div className="text-6xl font-extralight tracking-tighter truncate mb-4 text-white">
+                <div className="text-5xl sm:text-6xl font-extralight tracking-tighter break-all mb-4 text-white">
                   {factorInput || '0'}
                 </div>
                 <div className="flex flex-wrap justify-center gap-3 max-h-32 overflow-y-auto px-4 mb-4">
@@ -623,7 +621,7 @@ export default function App() {
                   {distributiveProblem.type.includes('ADD') ? '加法分配律' : '減法分配律'} / DISTRIBUTIVE LAW
                 </div>
                 
-                <div className="text-4xl font-extralight tracking-tight mb-4 text-white">
+                <div className="text-3xl sm:text-4xl font-extralight tracking-tight mb-4 text-white break-words">
                   {distributiveProblem.type === 'ADD_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} + ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'SUB_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} - ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'ADD_RIGHT' && `(${distributiveProblem.b} + ${distributiveProblem.c}) × ${distributiveProblem.a}`}
@@ -751,21 +749,7 @@ export default function App() {
               )}
               
               {mode === 'MENU' && (
-                <div className="flex justify-center gap-6 text-[10px] uppercase tracking-[0.2em] font-light text-white/30">
-                  <button 
-                    onClick={() => setMode('INSTRUCTIONS')}
-                    className="hover:text-[#FF9F0A] transition-colors border-b border-transparent hover:border-[#FF9F0A]/30 pb-0.5"
-                  >
-                    使用說明
-                  </button>
-                  <span className="opacity-20">|</span>
-                  <button 
-                    onClick={() => setMode('CHANGELOG')}
-                    className="hover:text-[#FF9F0A] transition-colors border-b border-transparent hover:border-[#FF9F0A]/30 pb-0.5"
-                  >
-                    更新日誌
-                  </button>
-                </div>
+                <div className="h-4" />
               )}
             </div>
           ) : (
@@ -803,19 +787,19 @@ export default function App() {
                 {mode === 'GAME_24' && gameState.currentExpression === '' ? 'New' : 'AC'}
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
-                if (mode === 'GAME_24') handleInput('(');
-                if (mode === 'ARITHMETIC') generateArithmetic();
-                if (mode === 'DISTRIBUTIVE') generateDistributive();
-                if (mode === 'MULT_9X9') generateMult(9);
-                if (mode === 'MULT_19X19') generateMult(19);
-                if (mode === 'FACTORS') { setFactorInput(''); setFactors([]); }
+                if (mode === 'GAME_24') start24Game();
+                else if (mode === 'ARITHMETIC') generateArithmetic();
+                else if (mode === 'DISTRIBUTIVE') generateDistributive();
+                else if (mode === 'MULT_9X9') generateMult(9);
+                else if (mode === 'MULT_19X19') generateMult(19);
+                else if (mode === 'FACTORS') { setFactorInput(''); setFactors([]); }
               }}>
-                {mode === 'GAME_24' ? '(' : (['ARITHMETIC', 'DISTRIBUTIVE', 'MULT_9X9', 'MULT_19X19'].includes(mode) ? 'Next' : (mode === 'FACTORS' ? 'C' : '('))}
+                Next
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
-                if (mode === 'GAME_24') handleInput(')');
+                if (mode === 'GAME_24') setGameState(prev => ({ ...prev, showHint: !prev.showHint }));
               }}>
-                {mode === 'GAME_24' ? ')' : '.'}
+                {mode === 'GAME_24' ? (gameState.showHint ? 'Sol' : 'Hint') : '.'}
               </DeviceButton>
 
               {/* Row 2 */}
@@ -888,18 +872,9 @@ export default function App() {
                 if (mode === 'GAME_24') handleInput('+');
               }}>+</DeviceButton>
               <DeviceButton variant="func" onClick={() => {
-                if (mode === 'GAME_24') {
-                  if (gameState.showHint) setGameState(prev => ({ ...prev, showSolution: true }));
-                  else setGameState(prev => ({ ...prev, showHint: true }));
-                } else {
-                  if (mode === 'ARITHMETIC') generateArithmetic();
-                  if (mode === 'DISTRIBUTIVE') generateDistributive();
-                  if (mode === 'MULT_9X9') generateMult(9);
-                  if (mode === 'MULT_19X19') generateMult(19);
-                  if (mode === 'FACTORS') { setFactorInput(''); setFactors([]); }
-                }
+                if (mode === 'GAME_24') handleInput('(');
               }}>
-                {mode === 'GAME_24' ? (gameState.showHint ? 'Sol' : 'Hint') : 'New'}
+                {mode === 'GAME_24' ? '(' : 'New'}
               </DeviceButton>
 
               {/* Row 6 */}
@@ -908,17 +883,37 @@ export default function App() {
                 if (mode === 'ARITHMETIC') checkArithmetic();
                 if (mode === 'MULT_9X9' || mode === 'MULT_19X19') checkMult();
                 if (mode === 'FACTORS') findFactors();
-              }} className="col-span-2">=</DeviceButton>
-              <DeviceButton variant="func" isWide onClick={() => setMode('MENU')} className="col-span-2 flex-row gap-2">
-                <Home size={20} />
-                <span className="text-sm font-bold tracking-tight">返回主選單</span>
+              }} className="col-span-2 bg-[#FF9F0A] text-black hover:bg-[#FF9F0A]/90 border-none shadow-[0_0_20px_rgba(255,159,10,0.3)]">
+                ENTER
+              </DeviceButton>
+              <DeviceButton variant="func" onClick={() => {
+                if (mode === 'GAME_24') handleInput(')');
+                else setMode('MENU');
+              }}>
+                {mode === 'GAME_24' ? ')' : 'Menu'}
+              </DeviceButton>
+              <DeviceButton variant="func" onClick={() => setMode('MENU')}>
+                <Home size={18} />
               </DeviceButton>
             </>
           )}
         </div>
 
+        {/* Footer */}
+        <div className="mt-auto mb-4 text-center">
+          <div className="text-[9px] text-white/20 font-light tracking-widest uppercase">
+            © 2026 BERK STUDIO 數感邏輯 
+            <a 
+              href="mailto:glitch.remover_1i@icloud.com" 
+              className="ml-2 hover:text-white transition-colors underline decoration-white/10 underline-offset-4"
+            >
+              聯繫我們
+            </a>
+          </div>
+        </div>
+
         {/* Home Indicator */}
-        <div className="w-32 h-1 bg-white/20 rounded-full mx-auto mt-auto mb-2" />
+        <div className="w-32 h-1 bg-white/20 rounded-full mx-auto mb-2" />
       </motion.div>
     </div>
   );
