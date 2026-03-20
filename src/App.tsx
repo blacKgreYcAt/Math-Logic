@@ -19,7 +19,8 @@ import {
   Grid,
   Zap,
   Home,
-  Delete
+  Delete,
+  Smartphone
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
@@ -94,7 +95,7 @@ const solve24 = (numbers: number[], integerOnly: boolean = false): string | null
 const Screen = ({ children }: { children: React.ReactNode }) => (
   <div 
     id="learning-screen"
-    className="w-full flex-1 bg-black flex flex-col justify-center items-center p-6 font-sans text-white overflow-hidden border-b border-white/5 min-h-[420px]"
+    className="w-full flex-1 bg-black flex flex-col justify-center items-center p-6 font-sans text-white overflow-hidden border-b border-white/5 min-h-0"
   >
     <div className="w-full flex flex-col justify-center items-center">
       {children}
@@ -135,9 +136,64 @@ const DeviceButton = ({
   );
 };
 
+const PortraitPrompt = ({ onComplete }: { onComplete: () => void }) => {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 3000);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-8 text-center"
+    >
+      <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
+        <motion.div
+          animate={{ 
+            rotate: [90, 0],
+          }}
+          transition={{ 
+            duration: 2, 
+            repeat: Infinity, 
+            repeatDelay: 0.5,
+            ease: "easeInOut" 
+          }}
+          className="text-[#FF9F0A]"
+        >
+          <Smartphone size={80} strokeWidth={1} />
+        </motion.div>
+        <motion.div
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute inset-0 border-2 border-[#FF9F0A]/20 rounded-full scale-150"
+        />
+      </div>
+      <motion.h2 
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-xl font-light tracking-[0.2em] mb-3 text-white"
+      >
+        請將手機直式擺放
+      </motion.h2>
+      <motion.p 
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="text-white/40 text-xs font-light tracking-[0.1em] uppercase"
+      >
+        以便顯示最佳效果 / Portrait Mode Recommended
+      </motion.p>
+    </motion.div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
+  const [showPrompt, setShowPrompt] = useState(true);
   const [mode, setMode] = useState<Mode>('MENU');
   const [gameState, setGameState] = useState<GameState>({
     numbers: [],
@@ -302,11 +358,18 @@ export default function App() {
   const findFactors = () => {
     const num = parseInt(factorInput);
     if (isNaN(num) || num <= 0) return;
-    const f = [];
-    for (let i = 1; i <= num; i++) {
-      if (num % i === 0) f.push(i);
+    if (num > 1000000) {
+      setGameState(prev => ({ ...prev, message: '數字太大囉！請輸入 1,000,000 以下的數字。' }));
+      return;
     }
-    setFactors(f);
+    const f = [];
+    for (let i = 1; i <= Math.sqrt(num); i++) {
+      if (num % i === 0) {
+        f.push(i);
+        if (i * i !== num) f.push(num / i);
+      }
+    }
+    setFactors(f.sort((a, b) => a - b));
   };
 
   // --- Screenshot Logic ---
@@ -320,10 +383,10 @@ export default function App() {
       
       const canvas = await html2canvas(element, {
         backgroundColor: '#000',
-        scale: 3, // Higher scale for better quality
+        scale: 2, // Balanced scale for quality and performance
         logging: false,
         useCORS: true,
-        allowTaint: false, // Changed to false to avoid security errors
+        allowTaint: false,
         imageTimeout: 15000,
         removeContainer: true,
       });
@@ -351,13 +414,17 @@ export default function App() {
   }, [mode, start24Game, generateArithmetic, generateDistributive, generateMult]);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 font-sans text-white selection:bg-[#FF9F0A]/30">
+    <div className="h-[100dvh] w-screen bg-black flex items-center justify-center overflow-hidden font-sans text-white selection:bg-[#FF9F0A]/30">
+      <AnimatePresence>
+        {showPrompt && <PortraitPrompt onComplete={() => setShowPrompt(false)} />}
+      </AnimatePresence>
+
       <motion.div 
         id="minimalist-device"
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-[420px] h-[880px] bg-black flex flex-col p-6 relative rounded-[60px] border border-white/5 shadow-2xl"
+        className="w-full max-w-[420px] h-full max-h-[100dvh] bg-black flex flex-col p-6 relative sm:rounded-[60px] border border-white/5 shadow-2xl overflow-hidden"
       >
         {/* Status Bar Area */}
         <div className="flex justify-between items-center mb-6 px-4 opacity-40 text-xs tracking-widest font-medium">
@@ -416,7 +483,7 @@ export default function App() {
                   ))}
                 </div>
                 <div className="text-5xl font-extralight tracking-tighter truncate mb-2 text-[#FF9F0A]">
-                  {gameState.currentExpression || '0'}
+                  {gameState.currentExpression.replace(/\*/g, '×').replace(/\//g, '÷') || '0'}
                 </div>
                 
                 <div className="min-h-[50px] flex flex-col items-center justify-center gap-1">
@@ -617,7 +684,7 @@ export default function App() {
         </Screen>
 
         {/* Controls Area */}
-        <div className={`grid ${(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? 'grid-cols-1' : 'grid-cols-4'} gap-3 mt-auto mb-8 w-full px-2`}>
+        <div className={`grid ${(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? 'grid-cols-1' : 'grid-cols-4'} gap-2 mt-auto mb-4 w-full px-2`}>
           {(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? (
             <div className="flex flex-col gap-6 w-full">
               {mode === 'MENU' ? (
