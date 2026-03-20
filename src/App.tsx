@@ -447,7 +447,7 @@ export default function App() {
         {/* Status Bar Area */}
         <div className="flex justify-between items-center mb-2 px-4 opacity-40 text-xs tracking-widest font-medium">
           <div className="flex items-center gap-2">
-            <span>MATH.OS 2.4</span>
+            <span>數感邏輯</span>
           </div>
           <div className="flex gap-4 items-center uppercase tracking-widest">
             <button 
