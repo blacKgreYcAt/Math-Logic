@@ -202,6 +202,9 @@ export default function App() {
     history: [],
     message: '',
     isCorrect: null,
+    solution: null,
+    showHint: false,
+    showSolution: false,
   });
 
   // --- 24 Point Game Logic ---
@@ -229,7 +232,7 @@ export default function App() {
       target: 24,
       currentExpression: '',
       history: [],
-      message: '使用這四個數字湊出 24！',
+      message: '',
       isCorrect: null,
       solution: sol,
       showHint: false,
@@ -306,10 +309,15 @@ export default function App() {
   }, []);
 
   const checkArithmetic = () => {
-    if (parseInt(userAnswer) === arithmeticProblem.a) {
+    const val = parseInt(userAnswer);
+    if (isNaN(val)) {
+      setGameState(prev => ({ ...prev, isCorrect: false, message: '請先輸入答案喔！' }));
+      return;
+    }
+    if (val === arithmeticProblem.a) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！' }));
     } else {
-      setGameState(prev => ({ ...prev, isCorrect: false, message: '再試一次！' }));
+      setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${arithmeticProblem.a}` }));
     }
   };
 
@@ -321,18 +329,23 @@ export default function App() {
   const [multProblem, setMultProblem] = useState({ a: 1, b: 1, target: 1 });
 
   const generateMult = useCallback((max: number) => {
-    const a = Math.floor(Math.random() * (max - 1)) + 1;
-    const b = Math.floor(Math.random() * (max - 1)) + 1;
+    const a = Math.floor(Math.random() * max) + 1;
+    const b = Math.floor(Math.random() * max) + 1;
     setMultProblem({ a, b, target: a * b });
     setUserAnswer('');
-    setGameState(prev => ({ ...prev, isCorrect: null, message: `請輸入 ${a} × ${b} 的答案` }));
+    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
   }, []);
 
   const checkMult = () => {
-    if (parseInt(userAnswer) === multProblem.target) {
+    const val = parseInt(userAnswer);
+    if (isNaN(val)) {
+      setGameState(prev => ({ ...prev, isCorrect: false, message: '請先輸入答案喔！' }));
+      return;
+    }
+    if (val === multProblem.target) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！太棒了！' }));
     } else {
-      setGameState(prev => ({ ...prev, isCorrect: false, message: '再算一次看看喔！' }));
+      setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${multProblem.target}` }));
     }
   };
   type DistributiveType = 'ADD_LEFT' | 'SUB_LEFT' | 'ADD_RIGHT' | 'SUB_RIGHT';
@@ -357,9 +370,13 @@ export default function App() {
 
   const findFactors = () => {
     const num = parseInt(factorInput);
-    if (isNaN(num) || num <= 0) return;
+    if (isNaN(num) || num <= 0) {
+      setGameState(prev => ({ ...prev, message: '請輸入正整數', isCorrect: false }));
+      return;
+    }
+    setGameState(prev => ({ ...prev, message: '', isCorrect: null }));
     if (num > 1000000) {
-      setGameState(prev => ({ ...prev, message: '數字太大囉！請輸入 1,000,000 以下的數字。' }));
+      setGameState(prev => ({ ...prev, message: '數字太大囉！請輸入 1,000,000 以下的數字。', isCorrect: false }));
       return;
     }
     const f = [];
@@ -486,16 +503,16 @@ export default function App() {
                   {gameState.currentExpression.replace(/\*/g, '×').replace(/\//g, '÷') || '0'}
                 </div>
                 
-                <div className="min-h-[50px] flex flex-col items-center justify-center gap-1">
+                <div className="min-h-[60px] flex flex-col items-center justify-center gap-2">
                   <motion.div 
-                    key={gameState.message}
+                    key={gameState.message + (gameState.isCorrect ?? 'null')}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className={`flex items-center justify-center gap-2 text-[14px] font-medium tracking-wider uppercase ${gameState.isCorrect === true ? 'text-green-400' : gameState.isCorrect === false ? 'text-red-500' : 'text-white/30'}`}
+                    className={`flex items-center justify-center gap-3 text-[14px] font-bold tracking-wide px-6 py-2 rounded-full shadow-md transition-colors duration-300 ${gameState.isCorrect === true ? 'text-green-400 bg-green-400/20 border border-green-400/30' : gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/30 bg-white/5'}`}
                   >
-                    {gameState.isCorrect === true && <CheckCircle2 size={12} />}
-                    {gameState.isCorrect === false && <XCircle size={12} />}
-                    <span>{gameState.message || '使用這四個數字湊出 24！'}</span>
+                    {gameState.isCorrect === true && <CheckCircle2 size={14} />}
+                    {gameState.isCorrect === false && <XCircle size={14} />}
+                    <span>{gameState.message || '請輸入算式'}</span>
                   </motion.div>
                   
                   <AnimatePresence>
@@ -528,14 +545,14 @@ export default function App() {
                   {userAnswer || '0'}
                 </div>
                 <motion.div 
-                  key={gameState.message}
+                  key={gameState.message + (gameState.isCorrect ?? 'null')}
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className={`flex items-center justify-center gap-2 text-[14px] font-medium tracking-wider uppercase ${gameState.isCorrect === true ? 'text-green-400' : gameState.isCorrect === false ? 'text-red-500' : 'text-white/30'}`}
+                  className={`flex items-center justify-center gap-3 text-[14px] font-bold tracking-wide px-6 py-2 rounded-full shadow-md transition-colors duration-300 ${gameState.isCorrect === true ? 'text-green-400 bg-green-400/20 border border-green-400/30' : gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/30 bg-white/5'}`}
                 >
-                  {gameState.isCorrect === true && <CheckCircle2 size={12} />}
-                  {gameState.isCorrect === false && <XCircle size={12} />}
-                  <span>{gameState.message || '請輸入正確答案'}</span>
+                  {gameState.isCorrect === true && <CheckCircle2 size={14} />}
+                  {gameState.isCorrect === false && <XCircle size={14} />}
+                  <span>{gameState.message || '請輸入答案'}</span>
                 </motion.div>
               </motion.div>
             )}
@@ -556,14 +573,14 @@ export default function App() {
                   {userAnswer || '?'}
                 </div>
                 <motion.div 
-                  key={gameState.message}
+                  key={gameState.message + (gameState.isCorrect ?? 'null')}
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className={`flex items-center justify-center gap-3 text-[16px] font-bold tracking-wide px-8 py-3 rounded-full shadow-lg ${gameState.isCorrect === true ? 'text-green-400 bg-green-400/20 border border-green-400/30' : gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/50 bg-white/10'}`}
+                  className={`flex items-center justify-center gap-3 text-[16px] font-bold tracking-wide px-8 py-3 rounded-full shadow-lg transition-colors duration-300 ${gameState.isCorrect === true ? 'text-green-400 bg-green-400/20 border border-green-400/30' : gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/50 bg-white/10'}`}
                 >
                   {gameState.isCorrect === true && <CheckCircle2 size={16} />}
                   {gameState.isCorrect === false && <XCircle size={16} />}
-                  <span className="truncate">{gameState.message || '請輸入正確答案'}</span>
+                  <span className="truncate">{gameState.message || '請輸入答案'}</span>
                 </motion.div>
               </motion.div>
             )}
@@ -584,12 +601,13 @@ export default function App() {
                   ))}
                 </div>
                 <motion.div 
-                  key={gameState.message}
+                  key={(gameState.message || factors.length) + (gameState.isCorrect ?? 'null')}
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className={`flex items-center justify-center gap-2 text-[12px] font-medium tracking-wider uppercase text-white/30`}
+                  className={`flex items-center justify-center gap-3 text-[14px] font-bold tracking-wide px-6 py-2 rounded-full shadow-md transition-colors duration-300 ${gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/30 bg-white/5'}`}
                 >
-                  <span>{factors.length > 0 ? `${factors.length} Factors Found` : 'Enter a number'}</span>
+                  {gameState.isCorrect === false && <XCircle size={14} />}
+                  <span>{gameState.message || (factors.length > 0 ? `${factors.length} Factors Found` : 'Enter a number')}</span>
                 </motion.div>
               </motion.div>
             )}
@@ -752,8 +770,14 @@ export default function App() {
                 variant="func" 
                 onClick={() => {
                   if (mode === 'GAME_24') handleBackspace();
-                  else if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') setUserAnswer(prev => prev.slice(0, -1));
-                  else if (mode === 'FACTORS') setFactorInput(prev => prev.slice(0, -1));
+                  else if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') {
+                    setUserAnswer(prev => prev.slice(0, -1));
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
+                  else if (mode === 'FACTORS') {
+                    setFactorInput(prev => prev.slice(0, -1));
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
                 }} 
                 className="flex-col gap-1 border-[#FF9F0A]/30"
               >
@@ -793,8 +817,14 @@ export default function App() {
               {[7, 8, 9].map(n => (
                 <DeviceButton key={n} onClick={() => {
                   if (mode === 'GAME_24') handleInput(n.toString());
-                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') setUserAnswer(prev => prev + n);
-                  if (mode === 'FACTORS') setFactorInput(prev => prev + n);
+                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') {
+                    setUserAnswer(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
+                  if (mode === 'FACTORS') {
+                    setFactorInput(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
                 }}>{n}</DeviceButton>
               ))}
               <DeviceButton variant="op" onClick={() => {
@@ -805,8 +835,14 @@ export default function App() {
               {[4, 5, 6].map(n => (
                 <DeviceButton key={n} onClick={() => {
                   if (mode === 'GAME_24') handleInput(n.toString());
-                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') setUserAnswer(prev => prev + n);
-                  if (mode === 'FACTORS') setFactorInput(prev => prev + n);
+                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') {
+                    setUserAnswer(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
+                  if (mode === 'FACTORS') {
+                    setFactorInput(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
                 }}>{n}</DeviceButton>
               ))}
               <DeviceButton variant="op" onClick={() => {
@@ -817,8 +853,14 @@ export default function App() {
               {[1, 2, 3].map(n => (
                 <DeviceButton key={n} onClick={() => {
                   if (mode === 'GAME_24') handleInput(n.toString());
-                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') setUserAnswer(prev => prev + n);
-                  if (mode === 'FACTORS') setFactorInput(prev => prev + n);
+                  if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') {
+                    setUserAnswer(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
+                  if (mode === 'FACTORS') {
+                    setFactorInput(prev => prev + n);
+                    setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                  }
                 }}>{n}</DeviceButton>
               ))}
               <DeviceButton variant="op" onClick={() => {
@@ -828,8 +870,14 @@ export default function App() {
               {/* Row 5 */}
               <DeviceButton isWide onClick={() => {
                 if (mode === 'GAME_24') handleInput('0');
-                if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') setUserAnswer(prev => prev + '0');
-                if (mode === 'FACTORS') setFactorInput(prev => prev + '0');
+                if (mode === 'ARITHMETIC' || mode === 'MULT_9X9' || mode === 'MULT_19X19') {
+                  setUserAnswer(prev => prev + '0');
+                  setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                }
+                if (mode === 'FACTORS') {
+                  setFactorInput(prev => prev + '0');
+                  setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+                }
               }} className="col-span-2">0</DeviceButton>
               <DeviceButton variant="op" onClick={() => {
                 if (mode === 'GAME_24') handleInput('+');
