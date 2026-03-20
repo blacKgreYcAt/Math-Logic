@@ -279,7 +279,8 @@ export default function App() {
       if (Math.abs(result - 24) < 0.0001) {
         setGameState(prev => ({ ...prev, message: '太棒了！正確答案！', isCorrect: true }));
       } else {
-        setGameState(prev => ({ ...prev, message: `不對喔，結果是 ${result}`, isCorrect: false }));
+        const formattedResult = Number.isInteger(result) ? result : Number(result.toFixed(2));
+        setGameState(prev => ({ ...prev, message: `不對喔，結果是 ${formattedResult}`, isCorrect: false }));
       }
     } catch (e) {
       setGameState(prev => ({ ...prev, message: '算式格式錯誤！', isCorrect: false }));
@@ -446,7 +447,7 @@ export default function App() {
         {/* Status Bar Area */}
         <div className="flex justify-between items-center mb-6 px-4 opacity-40 text-xs tracking-widest font-medium">
           <div className="flex items-center gap-2">
-            <span>MATH.OS 2.0</span>
+            <span>MATH.OS 2.4</span>
             <button 
               onClick={takeScreenshot}
               className="p-1.5 hover:bg-white/10 rounded-full transition-colors active:scale-90"
@@ -680,8 +681,12 @@ export default function App() {
                 <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.15em] uppercase mb-4 text-center">更新日誌 / CHANGELOG</div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] text-[#FF9F0A] font-bold">v2.3 (Current)</p>
-                    <p className="text-sm font-light text-white/70">新增「標準九九乘法」與「19x19 進階乘法」功能，優化選單配置。</p>
+                    <p className="text-[10px] text-[#FF9F0A] font-bold">v2.4 (Current)</p>
+                    <p className="text-sm font-light text-white/70">優化 24 點遊戲的小數點顯示，修復細微錯誤並統一 UI 反饋。</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-white/40 font-bold">v2.3</p>
+                    <p className="text-sm font-light text-white/50">新增「標準九九乘法」與「19x19 進階乘法」功能，優化選單配置。</p>
                   </div>
                   <div>
                     <p className="text-[10px] text-white/40 font-bold">v2.2</p>
