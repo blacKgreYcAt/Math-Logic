@@ -95,9 +95,9 @@ const solve24 = (numbers: number[], integerOnly: boolean = false): string | null
 const Screen = ({ children }: { children: React.ReactNode }) => (
   <div 
     id="learning-screen"
-    className="w-full flex-1 bg-black flex flex-col justify-center items-center p-6 font-sans text-white overflow-hidden border-b border-white/5 min-h-0"
+    className="w-full flex-1 bg-black flex flex-col justify-center items-center p-4 font-sans text-white overflow-y-auto border-b border-white/5 min-h-0"
   >
-    <div className="w-full flex flex-col justify-center items-center">
+    <div className="w-full flex flex-col justify-center items-center py-2">
       {children}
     </div>
   </div>
@@ -184,7 +184,7 @@ const PortraitPrompt = ({ onComplete }: { onComplete: () => void }) => {
         transition={{ delay: 0.7 }}
         className="text-white/40 text-xs font-light tracking-[0.1em] uppercase"
       >
-        以便顯示最佳效果 / Portrait Mode Recommended
+        以便顯示最佳效果
       </motion.p>
     </motion.div>
   );
@@ -418,7 +418,7 @@ export default function App() {
       document.body.removeChild(link);
     } catch (err) {
       console.error('Screenshot failed:', err);
-      alert('截圖失敗，請稍後再試。 (Screenshot failed, please try again.)');
+      alert('截圖失敗，請稍後再試。');
     }
   };
 
@@ -442,10 +442,10 @@ export default function App() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-[420px] h-full max-h-[100dvh] bg-black flex flex-col p-6 relative sm:rounded-[60px] border border-white/5 shadow-2xl overflow-hidden"
+        className="w-full max-w-[420px] h-full max-h-[100dvh] bg-black flex flex-col p-4 sm:p-6 relative sm:rounded-[60px] border border-white/5 shadow-2xl overflow-hidden"
       >
         {/* Status Bar Area */}
-        <div className="flex justify-between items-center mb-6 px-4 opacity-40 text-xs tracking-widest font-medium">
+        <div className="flex justify-between items-center mb-4 px-4 opacity-40 text-xs tracking-widest font-medium">
           <div className="flex items-center gap-2">
             <span>MATH.OS 2.4</span>
           </div>
@@ -486,8 +486,8 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">24 點遊戲 / 24 POINT CHALLENGE</div>
-                <div className="flex justify-center gap-3 my-2 flex-wrap">
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">24 點遊戲</div>
+                <div className="flex justify-center gap-3 my-1 flex-wrap">
                   {gameState.numbers.map((n, i) => (
                     <motion.span 
                       key={i} 
@@ -498,11 +498,11 @@ export default function App() {
                     </motion.span>
                   ))}
                 </div>
-                <div className="text-4xl sm:text-5xl font-extralight tracking-tighter break-all mb-2 text-[#FF9F0A] min-h-[1.2em] flex items-center justify-center">
+                <div className="text-3xl sm:text-4xl font-extralight tracking-tighter break-all mb-1 text-[#FF9F0A] min-h-[1.2em] flex items-center justify-center">
                   {gameState.currentExpression.replace(/\*/g, '×').replace(/\//g, '÷') || '0'}
                 </div>
                 
-                <div className="min-h-[60px] flex flex-col items-center justify-center gap-2">
+                <div className="min-h-[50px] flex flex-col items-center justify-center gap-1">
                   <motion.div 
                     key={gameState.message + (gameState.isCorrect ?? 'null')}
                     initial={{ scale: 0.9, opacity: 0 }}
@@ -522,7 +522,7 @@ export default function App() {
                         exit={{ opacity: 0 }}
                         className="text-[10px] text-[#FF9F0A] font-mono tracking-wider bg-[#FF9F0A]/10 px-2.5 py-0.5 rounded-full border border-[#FF9F0A]/20"
                       >
-                        {gameState.showSolution ? `SOL: ${gameState.solution}` : `HINT: ${gameState.solution?.substring(0, Math.floor((gameState.solution?.length || 0) / 2))}...`}
+                        {gameState.showSolution ? `解答: ${gameState.solution}` : `提示: ${gameState.solution?.substring(0, Math.floor((gameState.solution?.length || 0) / 2))}...`}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -536,11 +536,11 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-3 opacity-70">四則運算 / ARITHMETIC</div>
-                <div className="text-3xl sm:text-4xl font-extralight mb-3 tracking-tighter text-white/90 break-words">
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">四則運算</div>
+                <div className="text-3xl sm:text-4xl font-extralight mb-2 tracking-tighter text-white/90 break-words">
                   {arithmeticProblem.q} = ?
                 </div>
-                <div className="text-5xl sm:text-6xl font-extralight tracking-tighter break-all mb-3 text-[#FF9F0A] tabular-nums">
+                <div className="text-4xl sm:text-5xl font-extralight tracking-tighter break-all mb-2 text-[#FF9F0A] tabular-nums">
                   {userAnswer || '0'}
                 </div>
                 <motion.div 
@@ -562,13 +562,13 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[12px] text-[#FF9F0A] font-bold tracking-[0.2em] uppercase opacity-90 mb-6">
+                <div className="text-[12px] text-[#FF9F0A] font-bold tracking-[0.2em] uppercase opacity-90 mb-4">
                   {mode === 'MULT_9X9' ? '標準九九乘法' : '19x19 進階乘法'}
                 </div>
-                <div className="text-5xl sm:text-6xl font-extralight tracking-tight text-white mb-4 leading-tight">
+                <div className="text-4xl sm:text-5xl font-extralight tracking-tight text-white mb-2 leading-tight">
                   {multProblem.a} × {multProblem.b}
                 </div>
-                <div className="text-5xl font-light text-[#FF9F0A] min-h-[1.2em] mb-8 leading-tight">
+                <div className="text-4xl font-light text-[#FF9F0A] min-h-[1.2em] mb-4 leading-tight">
                   {userAnswer || '?'}
                 </div>
                 <motion.div 
@@ -588,8 +588,8 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-3 opacity-70">因數尋找 / FACTOR FINDER</div>
-                <div className="text-5xl sm:text-6xl font-extralight tracking-tighter break-all mb-4 text-white">
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">因數尋找</div>
+                <div className="text-4xl sm:text-5xl font-extralight tracking-tighter break-all mb-2 text-white">
                   {factorInput || '0'}
                 </div>
                 <div className="flex flex-wrap justify-center gap-3 max-h-32 overflow-y-auto px-4 mb-4">
@@ -606,7 +606,7 @@ export default function App() {
                   className={`flex items-center justify-center gap-3 text-[14px] font-bold tracking-wide px-6 py-2 rounded-full shadow-md transition-colors duration-300 ${gameState.isCorrect === false ? 'text-red-400 bg-red-400/20 border border-red-400/30' : 'text-white/30 bg-white/5'}`}
                 >
                   {gameState.isCorrect === false && <XCircle size={14} />}
-                  <span>{gameState.message || (factors.length > 0 ? `${factors.length} Factors Found` : 'Enter a number')}</span>
+                  <span>{gameState.message || (factors.length > 0 ? `找到 ${factors.length} 個因數` : '請輸入數字')}</span>
                 </motion.div>
               </motion.div>
             )}
@@ -617,26 +617,26 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-4 opacity-70">
-                  {distributiveProblem.type.includes('ADD') ? '加法分配律' : '減法分配律'} / DISTRIBUTIVE LAW
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">
+                  {distributiveProblem.type.includes('ADD') ? '加法分配律' : '減法分配律'}
                 </div>
                 
-                <div className="text-3xl sm:text-4xl font-extralight tracking-tight mb-4 text-white break-words">
+                <div className="text-2xl sm:text-3xl font-extralight tracking-tight mb-2 text-white break-words">
                   {distributiveProblem.type === 'ADD_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} + ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'SUB_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} - ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'ADD_RIGHT' && `(${distributiveProblem.b} + ${distributiveProblem.c}) × ${distributiveProblem.a}`}
                   {distributiveProblem.type === 'SUB_RIGHT' && `(${distributiveProblem.b} - ${distributiveProblem.c}) × ${distributiveProblem.a}`}
                 </div>
 
-                <div className="text-2xl font-light text-white/40 mb-4">
+                <div className="text-xl font-light text-white/40 mb-2">
                   = {distributiveProblem.type.includes('LEFT') ? 
                       `${distributiveProblem.a}×${distributiveProblem.b} ${distributiveProblem.type.includes('ADD') ? '+' : '-'} ${distributiveProblem.a}×${distributiveProblem.c}` :
                       `${distributiveProblem.b}×${distributiveProblem.a} ${distributiveProblem.type.includes('ADD') ? '+' : '-'} ${distributiveProblem.c}×${distributiveProblem.a}`
                     }
                 </div>
 
-                <div className="w-full border-t border-white/5 pt-4 mt-4">
-                  <div className="text-3xl font-extralight text-[#FF9F0A]">
+                <div className="w-full border-t border-white/5 pt-2 mt-2">
+                  <div className="text-2xl font-extralight text-[#FF9F0A]">
                     {distributiveProblem.type.includes('ADD') ? 
                       `${distributiveProblem.type.includes('LEFT') ? distributiveProblem.a : (distributiveProblem.b + distributiveProblem.c)} × ${distributiveProblem.type.includes('LEFT') ? (distributiveProblem.b + distributiveProblem.c) : distributiveProblem.a} = ${distributiveProblem.a * (distributiveProblem.b + distributiveProblem.c)}` :
                       `${distributiveProblem.type.includes('LEFT') ? distributiveProblem.a : (distributiveProblem.b - distributiveProblem.c)} × ${distributiveProblem.type.includes('LEFT') ? (distributiveProblem.b - distributiveProblem.c) : distributiveProblem.a} = ${distributiveProblem.a * (distributiveProblem.b - distributiveProblem.c)}`
@@ -900,7 +900,7 @@ export default function App() {
         </div>
 
         {/* Footer */}
-        <div className="mt-auto mb-4 text-center">
+        <div className="mt-auto mb-2 text-center">
           <div className="text-[9px] text-white/20 font-light tracking-widest uppercase">
             © 2026 BERK STUDIO 數感邏輯 
             <a 
