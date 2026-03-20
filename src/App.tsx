@@ -95,9 +95,9 @@ const solve24 = (numbers: number[], integerOnly: boolean = false): string | null
 const Screen = ({ children }: { children: React.ReactNode }) => (
   <div 
     id="learning-screen"
-    className="w-full flex-1 bg-black flex flex-col justify-center items-center p-4 font-sans text-white overflow-y-auto border-b border-white/5 min-h-0"
+    className="w-full flex-1 bg-black flex flex-col justify-center items-center px-4 py-2 font-sans text-white overflow-hidden border-b border-white/5 min-h-0"
   >
-    <div className="w-full flex flex-col justify-center items-center py-2">
+    <div className="w-full flex flex-col justify-center items-center">
       {children}
     </div>
   </div>
@@ -124,7 +124,7 @@ const DeviceButton = ({
     func: "bg-white/10 text-white/60 text-xl font-light hover:bg-white/15 border border-white/10",
   };
 
-  const heightClass = "h-12 sm:h-14";
+  const heightClass = "h-10 sm:h-14";
 
   return (
     <button 
@@ -442,10 +442,10 @@ export default function App() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-[420px] h-full max-h-[100dvh] bg-black flex flex-col p-4 sm:p-6 relative sm:rounded-[60px] border border-white/5 shadow-2xl overflow-hidden"
+        className="w-full max-w-[420px] h-full max-h-[100dvh] bg-black flex flex-col p-2 sm:p-6 relative sm:rounded-[60px] border border-white/5 shadow-2xl overflow-hidden"
       >
         {/* Status Bar Area */}
-        <div className="flex justify-between items-center mb-4 px-4 opacity-40 text-xs tracking-widest font-medium">
+        <div className="flex justify-between items-center mb-2 px-4 opacity-40 text-xs tracking-widest font-medium">
           <div className="flex items-center gap-2">
             <span>MATH.OS 2.4</span>
           </div>
@@ -487,7 +487,7 @@ export default function App() {
                 className="w-full text-center flex flex-col items-center"
               >
                 <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">24 點遊戲</div>
-                <div className="flex justify-center gap-3 my-1 flex-wrap">
+                <div className="flex justify-center gap-3 my-0.5 flex-wrap">
                   {gameState.numbers.map((n, i) => (
                     <motion.span 
                       key={i} 
@@ -498,11 +498,11 @@ export default function App() {
                     </motion.span>
                   ))}
                 </div>
-                <div className="text-3xl sm:text-4xl font-extralight tracking-tighter break-all mb-1 text-[#FF9F0A] min-h-[1.2em] flex items-center justify-center">
+                <div className="text-3xl sm:text-4xl font-extralight tracking-tighter break-all mb-0 text-[#FF9F0A] min-h-[1.2em] flex items-center justify-center">
                   {gameState.currentExpression.replace(/\*/g, '×').replace(/\//g, '÷') || '0'}
                 </div>
                 
-                <div className="min-h-[50px] flex flex-col items-center justify-center gap-1">
+                <div className="min-h-[40px] flex flex-col items-center justify-center gap-1">
                   <motion.div 
                     key={gameState.message + (gameState.isCorrect ?? 'null')}
                     initial={{ scale: 0.9, opacity: 0 }}
@@ -520,7 +520,7 @@ export default function App() {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="text-[10px] text-[#FF9F0A] font-mono tracking-wider bg-[#FF9F0A]/10 px-2.5 py-0.5 rounded-full border border-[#FF9F0A]/20"
+                        className="text-base text-[#FF9F0A] font-medium tracking-wide bg-[#FF9F0A]/20 px-5 py-2 rounded-full border border-[#FF9F0A]/40 shadow-[0_0_20px_rgba(255,159,10,0.15)]"
                       >
                         {gameState.showSolution ? `解答: ${gameState.solution}` : `提示: ${gameState.solution?.substring(0, Math.floor((gameState.solution?.length || 0) / 2))}...`}
                       </motion.div>
@@ -536,7 +536,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">四則運算</div>
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">四則運算</div>
                 <div className="text-3xl sm:text-4xl font-extralight mb-2 tracking-tighter text-white/90 break-words">
                   {arithmeticProblem.q} = ?
                 </div>
@@ -562,13 +562,13 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[12px] text-[#FF9F0A] font-bold tracking-[0.2em] uppercase opacity-90 mb-4">
+                <div className="text-[12px] text-[#FF9F0A] font-bold tracking-[0.2em] uppercase opacity-90 mb-1">
                   {mode === 'MULT_9X9' ? '標準九九乘法' : '19x19 進階乘法'}
                 </div>
                 <div className="text-4xl sm:text-5xl font-extralight tracking-tight text-white mb-2 leading-tight">
                   {multProblem.a} × {multProblem.b}
                 </div>
-                <div className="text-4xl font-light text-[#FF9F0A] min-h-[1.2em] mb-4 leading-tight">
+                <div className="text-4xl font-light text-[#FF9F0A] min-h-[1.2em] mb-2 leading-tight">
                   {userAnswer || '?'}
                 </div>
                 <motion.div 
@@ -588,11 +588,11 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">因數尋找</div>
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">因數尋找</div>
                 <div className="text-4xl sm:text-5xl font-extralight tracking-tighter break-all mb-2 text-white">
                   {factorInput || '0'}
                 </div>
-                <div className="flex flex-wrap justify-center gap-3 max-h-32 overflow-y-auto px-4 mb-4">
+                <div className="flex flex-wrap justify-center gap-3 max-h-32 overflow-y-auto px-4 mb-2">
                   {factors.map((f, i) => (
                     <span key={i} className="text-2xl font-light text-white/50">
                       {f}
@@ -617,25 +617,25 @@ export default function App() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
                 className="w-full text-center flex flex-col items-center"
               >
-                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-2 opacity-70">
+                <div className="text-[10px] text-[#FF9F0A] font-medium tracking-[0.1em] uppercase mb-1 opacity-70">
                   {distributiveProblem.type.includes('ADD') ? '加法分配律' : '減法分配律'}
                 </div>
                 
-                <div className="text-2xl sm:text-3xl font-extralight tracking-tight mb-2 text-white break-words">
+                <div className="text-2xl sm:text-3xl font-extralight tracking-tight mb-1 text-white break-words">
                   {distributiveProblem.type === 'ADD_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} + ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'SUB_LEFT' && `${distributiveProblem.a} × (${distributiveProblem.b} - ${distributiveProblem.c})`}
                   {distributiveProblem.type === 'ADD_RIGHT' && `(${distributiveProblem.b} + ${distributiveProblem.c}) × ${distributiveProblem.a}`}
                   {distributiveProblem.type === 'SUB_RIGHT' && `(${distributiveProblem.b} - ${distributiveProblem.c}) × ${distributiveProblem.a}`}
                 </div>
 
-                <div className="text-xl font-light text-white/40 mb-2">
+                <div className="text-xl font-light text-white/40 mb-1">
                   = {distributiveProblem.type.includes('LEFT') ? 
                       `${distributiveProblem.a}×${distributiveProblem.b} ${distributiveProblem.type.includes('ADD') ? '+' : '-'} ${distributiveProblem.a}×${distributiveProblem.c}` :
                       `${distributiveProblem.b}×${distributiveProblem.a} ${distributiveProblem.type.includes('ADD') ? '+' : '-'} ${distributiveProblem.c}×${distributiveProblem.a}`
                     }
                 </div>
 
-                <div className="w-full border-t border-white/5 pt-2 mt-2">
+                <div className="w-full border-t border-white/5 pt-1 mt-1">
                   <div className="text-2xl font-extralight text-[#FF9F0A]">
                     {distributiveProblem.type.includes('ADD') ? 
                       `${distributiveProblem.type.includes('LEFT') ? distributiveProblem.a : (distributiveProblem.b + distributiveProblem.c)} × ${distributiveProblem.type.includes('LEFT') ? (distributiveProblem.b + distributiveProblem.c) : distributiveProblem.a} = ${distributiveProblem.a * (distributiveProblem.b + distributiveProblem.c)}` :
@@ -705,7 +705,7 @@ export default function App() {
         </Screen>
 
         {/* Controls Area */}
-        <div className={`grid ${(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? 'grid-cols-1' : 'grid-cols-4'} gap-2 mt-auto mb-4 w-full px-2`}>
+        <div className={`grid ${(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? 'grid-cols-1' : 'grid-cols-4'} gap-1.5 mt-auto mb-2 w-full px-2`}>
           {(mode === 'MENU' || mode === 'INSTRUCTIONS' || mode === 'CHANGELOG') ? (
             <div className="flex flex-col gap-6 w-full">
               {mode === 'MENU' ? (
@@ -771,7 +771,7 @@ export default function App() {
                 className="flex-col gap-1 border-[#FF9F0A]/30"
               >
                 <Delete size={24} className="text-[#FF9F0A]" strokeWidth={2.5} />
-                <span className="text-[10px] text-[#FF9F0A] font-bold tracking-tighter uppercase">Undo / 回推</span>
+                <span className="text-[10px] text-[#FF9F0A] font-bold tracking-tighter uppercase">回推</span>
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
                 if (mode === 'GAME_24' && gameState.currentExpression === '') {
@@ -784,7 +784,7 @@ export default function App() {
                   setFactors([]);
                 }
               }}>
-                {mode === 'GAME_24' && gameState.currentExpression === '' ? 'New' : 'AC'}
+                {mode === 'GAME_24' && gameState.currentExpression === '' ? '新題' : '清除'}
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
                 if (mode === 'GAME_24') start24Game();
@@ -794,12 +794,21 @@ export default function App() {
                 else if (mode === 'MULT_19X19') generateMult(19);
                 else if (mode === 'FACTORS') { setFactorInput(''); setFactors([]); }
               }}>
-                Next
+                次題
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
-                if (mode === 'GAME_24') setGameState(prev => ({ ...prev, showHint: !prev.showHint }));
+                if (mode === 'GAME_24') {
+                  setGameState(prev => {
+                    if (!prev.showHint && !prev.showSolution) return { ...prev, showHint: true, showSolution: false };
+                    if (prev.showHint) return { ...prev, showHint: false, showSolution: true };
+                    return { ...prev, showHint: false, showSolution: false };
+                  });
+                }
               }}>
-                {mode === 'GAME_24' ? (gameState.showHint ? 'Sol' : 'Hint') : '.'}
+                {mode === 'GAME_24' ? (
+                  !gameState.showHint && !gameState.showSolution ? '提示' : 
+                  gameState.showHint ? '解答' : '關閉'
+                ) : '.'}
               </DeviceButton>
 
               {/* Row 2 */}
@@ -883,14 +892,14 @@ export default function App() {
                 if (mode === 'ARITHMETIC') checkArithmetic();
                 if (mode === 'MULT_9X9' || mode === 'MULT_19X19') checkMult();
                 if (mode === 'FACTORS') findFactors();
-              }} className="col-span-2 bg-[#FF9F0A] text-black hover:bg-[#FF9F0A]/90 border-none shadow-[0_0_20px_rgba(255,159,10,0.3)]">
-                ENTER
+              }} className="col-span-2 !bg-[#FF9F0A] !text-black font-bold hover:opacity-90 border-none shadow-[0_0_30px_rgba(255,159,10,0.5)]">
+                確認
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => {
                 if (mode === 'GAME_24') handleInput(')');
                 else setMode('MENU');
               }}>
-                {mode === 'GAME_24' ? ')' : 'Menu'}
+                {mode === 'GAME_24' ? ')' : '選單'}
               </DeviceButton>
               <DeviceButton variant="func" onClick={() => setMode('MENU')}>
                 <Home size={18} />
