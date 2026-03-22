@@ -207,6 +207,32 @@ export default function App() {
     showSolution: false,
   });
 
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
+  useEffect(() => {
+    if (['MENU', 'INSTRUCTIONS', 'CHANGELOG', 'FACTORS', 'DISTRIBUTIVE'].includes(mode)) {
+      setIsTimerRunning(false);
+      setElapsedTime(0);
+    }
+  }, [mode]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
   // --- 24 Point Game Logic ---
   const start24Game = useCallback(() => {
     let newNumbers: number[] = [];
@@ -238,6 +264,8 @@ export default function App() {
       showHint: false,
       showSolution: false,
     });
+    setElapsedTime(0);
+    setIsTimerRunning(true);
   }, []);
 
   const handleInput = (val: string) => {
@@ -278,6 +306,7 @@ export default function App() {
       const result = new Function(`return ${gameState.currentExpression.replace(/×/g, '*').replace(/÷/g, '/')}`)();
       if (Math.abs(result - 24) < 0.0001) {
         setGameState(prev => ({ ...prev, message: '太棒了！正確答案！', isCorrect: true }));
+        setIsTimerRunning(false);
         setTimeout(() => start24Game(), 1500);
       } else {
         const formattedResult = Number.isInteger(result) ? result : Number(result.toFixed(2));
@@ -308,6 +337,8 @@ export default function App() {
     });
     setUserAnswer('');
     setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+    setElapsedTime(0);
+    setIsTimerRunning(true);
   }, []);
 
   const checkArithmetic = () => {
@@ -318,6 +349,7 @@ export default function App() {
     }
     if (val === arithmeticProblem.a) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！' }));
+      setIsTimerRunning(false);
       setTimeout(() => generateArithmetic(), 1500);
     } else {
       setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${arithmeticProblem.a}` }));
@@ -337,6 +369,8 @@ export default function App() {
     setMultProblem({ a, b, target: a * b });
     setUserAnswer('');
     setGameState(prev => ({ ...prev, isCorrect: null, message: '' }));
+    setElapsedTime(0);
+    setIsTimerRunning(true);
   }, []);
 
   const checkMult = () => {
@@ -347,6 +381,7 @@ export default function App() {
     }
     if (val === multProblem.target) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！太棒了！' }));
+      setIsTimerRunning(false);
       setTimeout(() => generateMult(mode === 'MULT_9X9' ? 9 : 19), 1500);
     } else {
       setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${multProblem.target}` }));
@@ -471,6 +506,11 @@ export default function App() {
 
         {/* Screen Area */}
         <Screen>
+          {['GAME_24', 'ARITHMETIC', 'MULT_9X9', 'MULT_19X19'].includes(mode) && (
+            <div className={`absolute top-4 right-5 font-mono text-sm font-bold tracking-widest z-10 transition-colors duration-300 ${isTimerRunning ? 'text-red-500' : 'text-green-500'}`}>
+              {formatTime(elapsedTime)}
+            </div>
+          )}
           <AnimatePresence mode="wait">
             {mode === 'MENU' && (
               <motion.div 
