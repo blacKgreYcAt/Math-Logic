@@ -278,6 +278,7 @@ export default function App() {
       const result = new Function(`return ${gameState.currentExpression.replace(/×/g, '*').replace(/÷/g, '/')}`)();
       if (Math.abs(result - 24) < 0.0001) {
         setGameState(prev => ({ ...prev, message: '太棒了！正確答案！', isCorrect: true }));
+        setTimeout(() => start24Game(), 1500);
       } else {
         const formattedResult = Number.isInteger(result) ? result : Number(result.toFixed(2));
         setGameState(prev => ({ ...prev, message: `不對喔，結果是 ${formattedResult}`, isCorrect: false }));
@@ -317,6 +318,7 @@ export default function App() {
     }
     if (val === arithmeticProblem.a) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！' }));
+      setTimeout(() => generateArithmetic(), 1500);
     } else {
       setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${arithmeticProblem.a}` }));
     }
@@ -345,6 +347,7 @@ export default function App() {
     }
     if (val === multProblem.target) {
       setGameState(prev => ({ ...prev, isCorrect: true, message: '答對了！太棒了！' }));
+      setTimeout(() => generateMult(mode === 'MULT_9X9' ? 9 : 19), 1500);
     } else {
       setGameState(prev => ({ ...prev, isCorrect: false, message: `不對喔，正確答案是 ${multProblem.target}` }));
     }
